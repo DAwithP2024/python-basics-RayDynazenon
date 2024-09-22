@@ -128,4 +128,4 @@ def main():
 It also checks that this is the module that's being run directly, and not being used as a module in some other program. 
 In that case, only the part that's needed will be executed and not the entire program """
 if __name__ == "__main__":
-    main() 
+    main()
