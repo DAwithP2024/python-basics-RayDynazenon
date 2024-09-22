@@ -1,3 +1,4 @@
+
 # Products available in the store by category
 products = {
     "IT Products": [
@@ -32,41 +33,100 @@ products = {
 
 
 def display_sorted_products(products_list, sort_order):
-    pass
-
+    if sort_order == "asc":
+        return sorted(products_list, key=lambda x: x[1])
+    elif sort_order == "desc":
+        return sorted(products_list, key=lambda x: x[1], reverse=True)
 
 def display_products(products_list):
-    pass
-
+    for index, product in enumerate(products_list):
+        print(f"{index + 1}. {product[0]} - ${product[1]}")
 
 def display_categories():
-    pass
+    for index, category in enumerate(products):
+        print(f"{index + 1}. {category}")
+    choice = input("Select a category by number: ")
+    if choice.isdigit():
+        choice = int(choice)
+        if 1 <= choice <= len(products):
+            return choice - 1
+    return None
 
 
 def add_to_cart(cart, product, quantity):
-    pass
+    cart.append((product[0], product[1], quantity))
 
 def display_cart(cart):
-    pass
+    total_cost = 0
+    output = ""
+    for item in cart:
+        product_name, product_price, quantity = item
+        total_cost += product_price * quantity
+        output += f"{product_name} - ${product_price} x {quantity} = ${product_price * quantity}\n"
+    output += f"Total cost: ${total_cost}"
+    
+    print(output)
+    return output
 
+def total_cost(cart):
+    total_cost = 0
+    for item in cart:
+        product_name, product_price, quantity = item
+        total_cost += product_price * quantity
+
+    return total_cost
 
 def generate_receipt(name, email, cart, total_cost, address):
-    pass
-
+    print(f"Customer: {name}\nEmail: {email}\nItems Purchased:\n")
+    for product_name, product_price, quantity in cart:
+        print(f"{product_name} - ${product_price} x {quantity} = ${product_price * quantity}")
+    print(f"Total: ${total_cost}\nDelivery Address: {address}\nYour items will be delivered in 3 days.\nPayment will be accepted upon delivery.")
 
 def validate_name(name):
-    pass
+    if " " in name:
+        words = name.split()
+        for word in words:
+            if not word.isalpha():
+                return False
+        return True
 
 def validate_email(email):
-    pass
-
+    return "@" in email and not " " in email
 
 def main():
-    pass
-    
+    category_index = display_categories()
+    if category_index is not None:
+        category = list(products.keys())[category_index]
+        display_products(products[category])
+        product_choice = input("Select a product by number: ")
+        if product_choice.isdigit():
+            product_choice = int(product_choice) - 1
+            if 0 <= product_choice < len(products[category]):
+                quantity = input("Enter quantity: ")
+                if quantity.isdigit() and int(quantity) > 0:
+                    quantity = int(quantity)
+                    cart = []
+                    add_to_cart(cart, products[category][product_choice], quantity)
+                    display_cart(cart)
+                else:
+                    print("Invalid quantity. Please enter a positive number.")
+                    return None
+            else:
+                print("Invalid product choice. Please select a valid product.")
+                return None
+        else:
+            print("Invalid product number. Please enter a valid number.")
+            return None
+    else:
+        print("Invalid category choice. Please select a valid category.")
+        return None
+
+    return category_index
+
 
 """ The following block makes sure that the main() function is called when the program is run. 
 It also checks that this is the module that's being run directly, and not being used as a module in some other program. 
 In that case, only the part that's needed will be executed and not the entire program """
 if __name__ == "__main__":
     main()
+
